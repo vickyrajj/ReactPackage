@@ -1,6 +1,6 @@
 {
   "name": "react-setup-initial",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "",
   "main": "index.js",
@@ -125,7 +125,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
-    "@babel/core": "~7.9.0",
+    "@babel/core": "^7.9.6",
     "@babel/preset-react": "^7.12.10"
   },
   "babel": {
