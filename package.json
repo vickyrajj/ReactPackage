@@ -1,6 +1,6 @@
 {
   "name": "react-setup-initial",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "private": false,
   "description": "",
   "main": "index.js",
@@ -132,6 +132,14 @@
   "babel": {
     "presets": [
       "@babel/preset-react"
+    ],
+    "plugins": [
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
     ]
+  ]
   }
 }
