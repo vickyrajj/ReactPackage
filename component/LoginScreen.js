@@ -1,6 +1,6 @@
 
 import React, { Component }  from 'react';
-import { Alert, ScrollView, StyleSheet, View, Text, TextInput, Picker,StatusBar, TouchableHighlight,TouchableOpacity, ImageBackground, Image,AsyncStorage,Keyboard,Linking,PermissionsAndroid,ToastAndroid,Dimensions} from 'react-native';
+import { Alert, ScrollView, StyleSheet, View, Text, TextInput, Picker,StatusBar, TouchableHighlight,TouchableOpacity, ImageBackground, Image,AsyncStorage,Keyboard,Linking,PermissionsAndroid,ToastAndroid,Dimensions,ActivityIndicator} from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Constants from 'expo-constants';
 import GradientButton from "react-native-gradient-buttons";
@@ -432,7 +432,6 @@ class LoginScreen extends Component {
   }else{
     return(
       <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-        // <Loader modalVisible = {true} animationType="fade" />
         <ActivityIndicator size="small" color="#3bb3c8" />
       </View>
     )
