@@ -57,6 +57,7 @@
     "i18n-js": "^3.8.0",
     "i18next": "^19.8.4",
     "moment": "^2.24.0",
+    "prop-types": "^15.7.2",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
