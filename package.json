@@ -1,6 +1,6 @@
 {
   "name": "react-setup-initial",
-  "version": "1.0.8",
+  "version": "1.1.2",
   "private": false,
   "description": "",
   "main": "index.js",
@@ -49,6 +49,7 @@
     "expo-linking": "^2.0.0",
     "expo-localization": "~8.2.1",
     "expo-location": "~8.2.1",
+    "expo-permissions": "^10.0.0",
     "expo-sharing": "~8.2.1",
     "expo-sqlite": "~8.2.1",
     "expo-status-bar": "^1.0.2",
@@ -127,19 +128,20 @@
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.9.6",
-    "@babel/preset-react": "^7.12.10"
+    "@babel/preset-react": "^7.12.10",
+    "metro-react-native-babel-preset": "^0.64.0"
   },
   "babel": {
     "presets": [
       "@babel/preset-react"
     ],
     "plugins": [
-    [
-      "@babel/plugin-proposal-class-properties",
-      {
-        "loose": true
-      }
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
     ]
-  ]
   }
 }

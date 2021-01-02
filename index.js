@@ -1,2 +1,7 @@
-export { default as StyledText } from './component/StyledText.js';
-export { default as LoginScreen } from './component/LoginScreen.js';
+import  {StyledText}   from './component/StyledText.js';
+import  {LoginScreen}   from './component/LoginScreen.js';
+
+export  {
+  StyledText,
+  LoginScreen
+};

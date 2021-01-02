@@ -61,26 +61,6 @@ class LoginScreen extends Component {
       }, 500);
     };
 
-    this.askDelete = index => {
-      Alert.alert('Delete Invoice', 'Do you want to Delete?', [{
-        text: 'Cancel',
-        onPress: () => {
-          return null;
-        }
-      }, {
-        text: 'Confirm',
-        onPress: () => {
-          var invoice = this.state.invoice;
-          invoice.splice(index, 1);
-          this.setState({
-            invoice: invoice
-          });
-        }
-      }], {
-        cancelable: false
-      });
-    };
-
     this.renderSvg = () => {
       return /*#__PURE__*/React.createElement(View, {
         style: {
@@ -113,7 +93,8 @@ class LoginScreen extends Component {
       password: '',
       url: props.url,
       loader: false,
-      mobileNo: ''
+      mobileNo: '',
+      color: props.color
     };
     Keyboard.addListener('keyboardDidHide', this.showKeyboard);
     Keyboard.addListener('keyboardDidShow', this.hideKeyboard);
@@ -139,16 +120,6 @@ class LoginScreen extends Component {
         }
       }).then(responseJson => {// this.setState({ userPk: responseJson.pk,token:responseJson.token,mobile:responseJson.mobile,username:this.state.mobile });
         // AsyncStorage.setItem("userpk", responseJson.pk + '')
-        // this.props.navigation.navigate('OtpScreen',{
-        //   username:this.state.mobileNo,
-        //   screen:'',
-        //   userPk:responseJson.pk,
-        //   token:responseJson.token,
-        //   mobile:responseJson.mobileNo,
-        //   csrf:responseJson.csrf,
-        //   url:this.state.url,
-        //   mobileOTP:'',
-        // });
       }).catch(error => {
         return;
       });
@@ -179,16 +150,12 @@ class LoginScreen extends Component {
         if (!responseJson) {
           this.getOtp();
         } else {
-          this.props.sendOtp(); // this.props.navigation.navigate('OtpScreen',{
-          //   screen:'LogInScreen',
-          //   url:this.state.url,
-          //   username:this.state.mobileNo,
-          // });
-
+          this.props.sendOtp(true);
           return;
         }
       }).catch(error => {
         this.refs.toast.show(error.toString());
+        this.props.sendOtp(false);
         return;
       });
     }
@@ -254,14 +221,13 @@ class LoginScreen extends Component {
           AsyncStorage.setItem("SERVER_URL", this.state.url);
           this.setState({
             loader: false
-          });
-          AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
-            if (responseJson[0].is_staff) {
-              this.props.navigation.navigate('ScannerScreen');
-            } else {
-              this.props.navigation.navigate('NavigationScreen');
-            }
-          });
+          }); //  AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
+          //    if(responseJson[0].is_staff){
+          //      this.props.navigation.navigate('ScannerScreen')
+          //    }else{
+          //      this.props.navigation.navigate('NavigationScreen')
+          //    }
+          // });
         });
       }).catch(error => {
         this.setState({
@@ -318,11 +284,7 @@ class LoginScreen extends Component {
           AsyncStorage.setItem("userpk", JSON.stringify(responseJson[0].pk));
           AsyncStorage.setItem("SERVER_URL", this.state.url);
           console.log(this.state.url, 'urllllllll');
-          AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
-            return this.props.navigation.navigate('Main', {
-              sendurl: this.state.url
-            });
-          });
+          AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {});
         });
       }).catch(error => {
         ToastAndroid.show('Incorrect OTP', ToastAndroid.SHORT);
@@ -330,32 +292,7 @@ class LoginScreen extends Component {
     }
   }
 
-  submit() {
-    this.props.navigation.navigate('Tab'); // fetch('http://192.168.1.6:8000/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     username: this.state.username,
-    //     password: this.state.password,
-    //   }),
-    // }).then((response) => response.json())
-    //     .then((responseJson) => {
-    //     Alert.alert('here')
-    //     this.props.navigation.navigate('Tab')
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
-  }
-
   render() {
-    const {
-      navigate
-    } = this.props.navigation;
-
     if (!this.state.loader) {
       return /*#__PURE__*/React.createElement(View, {
         style: {
@@ -374,12 +311,12 @@ class LoginScreen extends Component {
       }), /*#__PURE__*/React.createElement(View, {
         style: {
           height: Constants.statusBarHeight,
-          backgroundColor: '#3bb3c8'
+          backgroundColor: this.state.color
         }
       }, /*#__PURE__*/React.createElement(StatusBar, {
         translucent: true,
         barStyle: "light-content",
-        backgroundColor: '#3bb3c8',
+        backgroundColor: this.state.color,
         networkActivityIndicatorVisible: false
       })), /*#__PURE__*/React.createElement(View, {
         style: {
@@ -461,7 +398,7 @@ class LoginScreen extends Component {
           this.sendOtp();
         },
         style: {
-          backgroundColor: '#3bb3c8',
+          backgroundColor: this.state.color,
           borderRadius: 20,
           paddingVertical: 8,
           paddingHorizontal: 20,
@@ -483,7 +420,7 @@ class LoginScreen extends Component {
         }
       }, /*#__PURE__*/React.createElement(ActivityIndicator, {
         size: "small",
-        color: "#3bb3c8"
+        color: this.state.color
       }));
     }
   }
@@ -492,98 +429,12 @@ class LoginScreen extends Component {
 
 LoginScreen.propTypes = {
   url: PropTypes.string,
-  sendOtp: PropTypes.func.isRequired // You can declare that a prop is a specific JS primitive. By default, these
-  // are all optional.
-  // needOTP : PropTypes.bool,
-  // username:PropTypes.string,
-  // loader:PropTypes.bool,
-  // optionalArray: PropTypes.array,
-  // optionalBool: PropTypes.bool,
-  // optionalFunc: PropTypes.func,
-  // optionalNumber: PropTypes.number,
-  // optionalObject: PropTypes.object,
-  // optionalString: PropTypes.string,
-  // optionalSymbol: PropTypes.symbol,
-  // Anything that can be rendered: numbers, strings, elements or an array
-  // (or fragment) containing these types.
-  // optionalNode: PropTypes.node,
-  // A React element (ie. <MyComponent />).
-  // optionalElement: PropTypes.element,
-  // A React element type (ie. MyComponent).
-  // optionalElementType: PropTypes.elementType,
-  // You can also declare that a prop is an instance of a class. This uses
-  // JS's instanceof operator.
-  // optionalMessage: PropTypes.instanceOf(Message),
-  // You can ensure that your prop is limited to specific values by treating
-  // it as an enum.
-  // optionalEnum: PropTypes.oneOf(['News', 'Photos']),
-  // An object that could be one of many types
-  // optionalUnion: PropTypes.oneOfType([
-  //   PropTypes.string,
-  //   PropTypes.number,
-  //   PropTypes.instanceOf(Message)
-  // ]),
-  // An array of a certain type
-  // optionalArrayOf: PropTypes.arrayOf(PropTypes.number),
-  // An object with property values of a certain type
-  // optionalObjectOf: PropTypes.objectOf(PropTypes.number),
-  // You can chain any of the above with `isRequired` to make sure a warning
-  // is shown if the prop isn't provided.
-  // An object taking on a particular shape
-  // optionalObjectWithShape: PropTypes.shape({
-  //   optionalProperty: PropTypes.string,
-  //   requiredProperty: PropTypes.number.isRequired
-  // }),
-  // An object with warnings on extra properties
-  // optionalObjectWithStrictShape: PropTypes.exact({
-  //   optionalProperty: PropTypes.string,
-  //   requiredProperty: PropTypes.number.isRequired
-  // }),
-  // requiredFunc: PropTypes.func.isRequired,
-  // A value of any data type
-  // requiredAny: PropTypes.any.isRequired,
-  // You can also specify a custom validator. It should return an Error
-  // object if the validation fails. Don't `console.warn` or throw, as this
-  // won't work inside `oneOfType`.
-  // customProp: function(props, propName, componentName) {
-  //   if (!/matchme/.test(props[propName])) {
-  //     return new Error(
-  //       'Invalid prop `' + propName + '` supplied to' +
-  //       ' `' + componentName + '`. Validation failed.'
-  //     );
-  //   }
-  // },
-  // You can also supply a custom validator to `arrayOf` and `objectOf`.
-  // It should return an Error object if the validation fails. The validator
-  // will be called for each key in the array or object. The first two
-  // arguments of the validator are the array or object itself, and the
-  // current item's key.
-  // customArrayProp: PropTypes.arrayOf(function(propValue, key, componentName, location, propFullName) {
-  //   if (!/matchme/.test(propValue[key])) {
-  //     return new Error(
-  //       'Invalid prop `' + propFullName + '` supplied to' +
-  //       ' `' + componentName + '`. Validation failed.'
-  //     );
-  //   }
-  // })
-
+  sendOtp: PropTypes.func.isRequired,
+  color: PropTypes.string
 };
 LoginScreen.defaultProps = {
-  url: 'https://klouderp.com'
+  url: 'https://klouderp.com',
+  color: '#3bb3c8'
 };
-const styles = StyleSheet.create({
-  submit: {
-    marginRight: 40,
-    marginLeft: 40,
-    marginTop: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderRadius: 50
-  },
-  imgBackground: {
-    width: '100%',
-    height: '100%',
-    flex: 1
-  }
-});
-export default LoginScreen;
+const styles = StyleSheet.create({});
+export { LoginScreen };
