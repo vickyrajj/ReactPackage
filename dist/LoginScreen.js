@@ -127,6 +127,12 @@ class LoginScreen extends Component {
   }
 
   sendOtp() {
+    this.props.navigation.navigate('OtpScreen', {
+      screen: 'LogInScreen',
+      url: this.state.url,
+      username: this.state.mobileNo
+    });
+    return;
     var mob = /^[1-9]{1}[0-9]{9}$/;
 
     if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
@@ -334,15 +340,30 @@ class LoginScreen extends Component {
         }
       }, /*#__PURE__*/React.createElement(View, {
         style: {
-          flex: 0.9,
+          flex: 0.2,
           zIndex: 2,
+          flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center'
+          marginHorizontal: 30
+        }
+      }, /*#__PURE__*/React.createElement(Image, {
+        style: {
+          width: width * 0.45,
+          height: width * 0.25,
+          resizeMode: 'contain'
+        },
+        source: require('./Images/erplogo.png')
+      })), /*#__PURE__*/React.createElement(View, {
+        style: {
+          flex: 0.8,
+          zIndex: 2,
+          justifyContent: 'flex-start'
         }
       }, /*#__PURE__*/React.createElement(View, {
         style: {
           marginVertical: 15,
-          alignItems: 'center'
+          marginHorizontal: 30,
+          marginTop: height * 0.15
         }
       }, /*#__PURE__*/React.createElement(Text, {
         style: {
@@ -350,43 +371,25 @@ class LoginScreen extends Component {
           fontSize: 25,
           color: '#000'
         }
-      }, " Welcome back ! "), /*#__PURE__*/React.createElement(Text, {
-        style: {
-          fontSize: 14,
-          color: '#000',
-          marginTop: 5
-        }
-      }, " Great To See You Again ")), /*#__PURE__*/React.createElement(View, {
+      }, " Login ")), /*#__PURE__*/React.createElement(View, {
         style: {
           marginHorizontal: 30,
           width: width - 60,
           marginVertical: 15
         }
-      }, /*#__PURE__*/React.createElement(View, {
+      }, /*#__PURE__*/React.createElement(TextInput, {
         style: {
-          position: 'absolute',
-          top: -9,
-          left: 20,
-          zIndex: 2,
-          backgroundColor: '#f2f2f2'
-        }
-      }, /*#__PURE__*/React.createElement(Text, {
-        style: {
-          fontSize: 12,
-          paddingHorizontal: 5,
-          color: '#000'
-        }
-      }, "Enter your mobile no")), /*#__PURE__*/React.createElement(TextInput, {
-        style: {
-          height: 45,
+          height: 50,
           borderWidth: 1,
-          borderColor: '#000',
+          borderColor: 'rgba(0, 0, 0, 0.1)',
           width: '100%',
           borderRadius: 10,
-          color: '#000',
-          paddingHorizontal: 15
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          paddingHorizontal: 15,
+          fontSize: 16
         },
-        placeholder: "",
+        placeholder: "Mobile Number",
+        placeholderTextColor: "rgba(0, 0, 0, 0.5)",
         selectionColor: '#000',
         onChangeText: query => {
           this.setState({
@@ -403,19 +406,22 @@ class LoginScreen extends Component {
           this.sendOtp();
         },
         style: {
-          backgroundColor: this.state.color,
-          borderRadius: 20,
-          paddingVertical: 8,
-          paddingHorizontal: 20,
-          marginVertical: 15
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginHorizontal: 30,
+          width: width - 60,
+          borderRadius: 10,
+          marginVertical: 15,
+          paddingVertical: 12,
+          backgroundColor: '#286090'
         }
       }, /*#__PURE__*/React.createElement(Text, {
         style: {
-          fontSize: 16,
+          fontSize: 18,
           color: '#fff',
-          fontWeight: '700'
+          fontWeight: '600'
         }
-      }, "Send OTP"))))));
+      }, "Get OTP"))))));
     } else {
       return /*#__PURE__*/React.createElement(View, {
         style: {
@@ -438,7 +444,7 @@ LoginScreen.propTypes = {
 };
 LoginScreen.defaultProps = {
   url: 'https://klouderp.com',
-  color: '#3bb3c8'
+  color: '#f2f2f2'
 };
 const styles = StyleSheet.create({});
 export { LoginScreen };

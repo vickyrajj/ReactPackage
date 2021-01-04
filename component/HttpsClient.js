@@ -185,4 +185,6 @@ const HttpsClient = {
     }
 }
 
-export  HttpsClient;
+export  {
+  HttpsClient
+}

@@ -1,7 +1,7 @@
 import  {StyledText}   from './component/StyledText.js';
 import  {LoginScreen}   from './component/LoginScreen.js';
 import  {OtpScreen}   from './component/OtpScreen.js';
-import  {HttpsClient}   from './component/HttpsClient.js';
+import  { HttpsClient }   from './component/HttpsClient.js';
 
 
 import React, { Component } from 'react';
