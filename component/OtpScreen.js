@@ -191,13 +191,11 @@ verify() {
      AsyncStorage.setItem("userpk", JSON.stringify(responseJson.pk))
      console.log(responseJson,'kkkkkkkkkkkkkkkkkkkkkkkkkk ');
      console.log('OtpScreen',this.state.sessionid,csrf,responseJson.pk)
-     AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
-     return  this.props.navigation.navigate ('DefaultScreen')
-     });
+     // this.props.navigation.navigate('DefaultScreen')
      // this.props.redirect({serverUrl:url,csrf:responseJson.csrf_token,userPk:JSON.stringify(responseJson.pk),sessionid:this.state.sessionid})
-     // AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
-     //  return  this.props.navigation.navigate ('DefaultScreen')
-     // });
+     AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
+      return  this.props.navigation.navigate ('DefaultScreen')
+     });
      return
      fetch(this.state.url + '/api/HR/users/?mode=mySelf&format=json', {
        headers: {
@@ -354,44 +352,90 @@ verify() {
      return (
         <View style={{flex:1,backgroundColor:'#f2f2f2'}}>
         <Toast style={{backgroundColor: '#000'}} textStyle={{color: '#fff'}} ref="toast" position = 'bottom'/>
-          <View style={{height:Constants.statusBarHeight,backgroundColor:'#3bb3c8'}}>
-             <StatusBar  translucent={true} barStyle="light-content" backgroundColor={'#3bb3c8'} networkActivityIndicatorVisible={false}    />
+          <View style={{height:Constants.statusBarHeight,backgroundColor:'#f2f2f2'}}>
+             <StatusBar  translucent={true} barStyle="light-content" backgroundColor={'#f2f2f2'} networkActivityIndicatorVisible={false}    />
           </View>
 
            <View style={{flex:1,zIndex:2,}}>
                <View style={{flex:1}}>
-                 <View style={{flex:0.9,zIndex:2,alignItems:'center',justifyContent:'center'}}>
+                 <View style={{flex:0.2,zIndex:2,flexDirection:'row',alignItems:'center',marginHorizontal:30}}>
+                    <Image style={{width:width*0.45,height:width*0.25,resizeMode:'contain'}} source={require('./Images/erplogo.png')} />
+                 </View>
+                 <View style={{flex:0.8,zIndex:2,}}>
+
+                 <View style={{marginVertical:15,marginHorizontal:30,}}>
+                    <Text style={{fontWeight: 'bold',fontSize: 25,color:'#000'}}>Login </Text>
+                 </View>
 
 
-                   <View style={{marginVertical:15,alignItems:'center'}}>
-                      <Text style={{fontWeight: 'bold',fontSize: 25,color:'#000'}}> Enter OTP  </Text>
-                      <Text style={{fontSize: 14,color:'#000',marginTop:5}}> OTP has been sent to +91 {this.state.username} </Text>
-                   </View>
-
-                   <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
-                     <View style={{position:'absolute',top:-9,left:20,zIndex:2,backgroundColor:'#f2f2f2'}}>
-                        <Text style={{fontSize:12,paddingHorizontal:5,color:'#000'}}>Enter OTP</Text>
-                     </View>
-                     <TextInput style={{height: 45,borderWidth:1,borderColor:'#000',width:'100%',borderRadius:10,color:'#000',paddingHorizontal:15}}
-                         placeholder=""
-                         selectionColor={'#000'}
-                         onChangeText={query => { this.setState({ otp: query });this.setState({ otp: query }) }}
-                         value={this.state.otp}
-                         keyboardType={'numeric'}
-                      />
+                   {
+                    // <View style={{marginVertical:15,alignItems:'center'}}>
+                    //   <Text style={{fontWeight: 'bold',fontSize: 25,color:'#000'}}> Enter OTP  </Text>
+                    //   <Text style={{fontSize: 14,color:'#000',marginTop:5}}> OTP has been sent to +91 {this.state.username} </Text>
+                    // </View>
+                  }
+                   {
+                    //  <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
+                    //  <View style={{position:'absolute',top:-9,left:20,zIndex:2,backgroundColor:'#f2f2f2'}}>
+                    //     <Text style={{fontSize:12,paddingHorizontal:5,color:'#000'}}>Enter OTP</Text>
+                    //  </View>
+                    //  <TextInput style={{height: 45,borderWidth:1,borderColor:'#000',width:'100%',borderRadius:10,color:'#000',paddingHorizontal:15}}
+                    //      placeholder=""
+                    //      selectionColor={'#000'}
+                    //      onChangeText={query => { this.setState({ otp: query });this.setState({ otp: query }) }}
+                    //      value={this.state.otp}
+                    //      keyboardType={'numeric'}
+                    //   />
+                    // </View>
+                  }
+                    <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
+                      <View style={{height: 50,borderWidth:1,borderColor:'#dff0d8',width:'100%',borderRadius:10,backgroundColor:'#dff0d8',paddingHorizontal:15,justifyContent:'center'}}>
+                        <Text style={{fontSize:16,color:'#3c763d',fontWeight:'600'}}>OTP Has been sent</Text>
+                      </View>
                     </View>
 
+                    <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
+                      <TextInput style={{height: 50,borderWidth:1,borderColor:'rgba(0, 0, 0, 0.1)',width:'100%',borderRadius:10,backgroundColor:'rgba(0, 0, 0, 0.1)',paddingHorizontal:15,fontSize:16}}
+                          placeholder="Mobile Number"
+                          placeholderTextColor='rgba(0, 0, 0, 0.5)'
+                          selectionColor={'#000'}
+                          onChangeText={query => { this.setState({ mobileNo: query });this.setState({ username: query }) }}
+                          value={this.state.username}
+                          keyboardType={'numeric'}
+                          editable={false}
+                       />
+                     </View>
+
+                    <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
+                      <TextInput style={{height: 50,borderWidth:1,borderColor:'rgba(0, 0, 0, 0.1)',width:'100%',borderRadius:10,backgroundColor:'rgba(0, 0, 0, 0.1)',paddingHorizontal:15,fontSize:16}}
+                          placeholder="OTP"
+                          placeholderTextColor='rgba(0, 0, 0, 0.5)'
+                          selectionColor={'#000'}
+                          onChangeText={query => { this.setState({ otp: query });this.setState({ otp: query })  }}
+                          value={this.state.otp}
+                          keyboardType={'numeric'}
+                       />
+                     </View>
 
 
-                  <View style={{flexDirection:'row',marginTop:30}}>
-                    <Text style={{fontSize: 14,color:'#000',}}> {`Did't receive any code?`}</Text>
-                    <TouchableOpacity style={{marginLeft:10}} onPress={()=>{this.resend()}}>
-                      <Text style={{fontSize:16,fontWeight:'700',color:'#000',textDecorationLine: 'underline'}}>RESEND</Text>
-                    </TouchableOpacity>
-                  </View>
 
-                  <TouchableOpacity onPress={()=>{this.verify()}} style={{backgroundColor:'#3bb3c8',borderRadius:20,paddingVertical:8,paddingHorizontal:20,marginVertical:15}}>
-                    <Text style={{fontSize:16,color:'#fff',fontWeight:'700'}}>Login</Text>
+                  {
+                  //   <View style={{flexDirection:'row',marginTop:30}}>
+                  //   <Text style={{fontSize: 14,color:'#000',}}> {`Did't receive any code?`}</Text>
+                  //   <TouchableOpacity style={{marginLeft:10}} onPress={()=>{this.resend()}}>
+                  //     <Text style={{fontSize:16,fontWeight:'700',color:'#000',textDecorationLine: 'underline'}}>RESEND</Text>
+                  //   </TouchableOpacity>
+                  // </View>
+                  }
+
+                  {
+                    // <TouchableOpacity onPress={()=>{this.verify()}} style={{backgroundColor:'#3bb3c8',borderRadius:20,paddingVertical:8,paddingHorizontal:20,marginVertical:15}}>
+                    // <Text style={{fontSize:16,color:'#fff',fontWeight:'700'}}>Login</Text>
+                    // </TouchableOpacity>
+                  }
+
+                  <TouchableOpacity onPress={()=>{this.verify()}} style={{alignItems:'center',justifyContent:'center',marginHorizontal:30,width:width-60,borderRadius:10,marginVertical:15,paddingVertical:12,backgroundColor:'#286090'}}>
+                    <Text style={{fontSize:18,color:'#fff',fontWeight:'600'}}>Sign In</Text>
                   </TouchableOpacity>
 
                  </View>
@@ -421,12 +465,12 @@ const styles = StyleSheet.create({
   },
 
   imgBackground: {
-      width: '100%',
-      height: '100%',
-      flex: 1
+    width: '100%',
+    height: '100%',
+    flex: 1
   },
 
-  });
+});
 
 export {
   OtpScreen

@@ -91,7 +91,13 @@ class LoginScreen extends Component {
        }
    }
 
-    sendOtp(){
+  sendOtp(){
+    this.props.navigation.navigate('OtpScreen',{
+      screen:'LogInScreen',
+      url:this.state.url,
+      username:this.state.mobileNo,
+    })
+    return
     var mob = /^[1-9]{1}[0-9]{9}$/;
     if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
       this.refs.toast.show('Enter Correct Mobile No');
@@ -292,19 +298,19 @@ class LoginScreen extends Component {
 
            <View style={{flex:1,zIndex:2,}}>
                <View style={{flex:1}}>
-                 <View style={{flex:0.9,zIndex:2,alignItems:'center',justifyContent:'center'}}>
+                 <View style={{flex:0.2,zIndex:2,flexDirection:'row',alignItems:'center',marginHorizontal:30}}>
+                    <Image style={{width:width*0.45,height:width*0.25,resizeMode:'contain'}} source={require('./Images/erplogo.png')} />
+                 </View>
+                 <View style={{flex:0.8,zIndex:2,justifyContent:'flex-start'}}>
 
-                   <View style={{marginVertical:15,alignItems:'center'}}>
-                      <Text style={{fontWeight: 'bold',fontSize: 25,color:'#000'}}> Welcome back ! </Text>
-                      <Text style={{fontSize: 14,color:'#000',marginTop:5}}> Great To See You Again </Text>
+                   <View style={{marginVertical:15,marginHorizontal:30,marginTop:height*0.15}}>
+                      <Text style={{fontWeight: 'bold',fontSize: 25,color:'#000'}}> Login </Text>
                    </View>
 
                    <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
-                     <View style={{position:'absolute',top:-9,left:20,zIndex:2,backgroundColor:'#f2f2f2'}}>
-                        <Text style={{fontSize:12,paddingHorizontal:5,color:'#000'}}>Enter your mobile no</Text>
-                     </View>
-                     <TextInput style={{height: 45,borderWidth:1,borderColor:'#000',width:'100%',borderRadius:10,color:'#000',paddingHorizontal:15}}
-                         placeholder=""
+                     <TextInput style={{height: 50,borderWidth:1,borderColor:'rgba(0, 0, 0, 0.1)',width:'100%',borderRadius:10,backgroundColor:'rgba(0, 0, 0, 0.1)',paddingHorizontal:15,fontSize:16}}
+                         placeholder="Mobile Number"
+                         placeholderTextColor='rgba(0, 0, 0, 0.5)'
                          selectionColor={'#000'}
                          onChangeText={query => { this.setState({ mobileNo: query });this.setState({ username: query }) }}
                          value={this.state.mobileNo}
@@ -312,8 +318,8 @@ class LoginScreen extends Component {
                       />
                     </View>
 
-                    <TouchableOpacity onPress={()=>{this.sendOtp()}} style={{backgroundColor:this.state.color,borderRadius:20,paddingVertical:8,paddingHorizontal:20,marginVertical:15}}>
-                      <Text style={{fontSize:16,color:'#fff',fontWeight:'700'}}>Send OTP</Text>
+                    <TouchableOpacity onPress={()=>{this.sendOtp()}} style={{alignItems:'center',justifyContent:'center',marginHorizontal:30,width:width-60,borderRadius:10,marginVertical:15,paddingVertical:12,backgroundColor:'#286090'}}>
+                      <Text style={{fontSize:18,color:'#fff',fontWeight:'600'}}>Get OTP</Text>
                     </TouchableOpacity>
 
                  </View>
@@ -327,8 +333,8 @@ class LoginScreen extends Component {
         <ActivityIndicator size="small" color={this.state.color} />
       </View>
     )
+   }
   }
-}
 }
 
 LoginScreen.propTypes = {
@@ -338,7 +344,7 @@ LoginScreen.propTypes = {
 
 LoginScreen.defaultProps = {
   url: 'https://klouderp.com',
-  color:'#3bb3c8'
+  color:'#f2f2f2'
 };
 
 
