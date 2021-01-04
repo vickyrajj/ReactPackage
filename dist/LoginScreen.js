@@ -150,7 +150,12 @@ class LoginScreen extends Component {
         if (!responseJson) {
           this.getOtp();
         } else {
-          this.props.sendOtp(true);
+          this.props.navigation.navigate('OtpScreen', {
+            screen: 'LogInScreen',
+            url: this.state.url,
+            username: this.state.mobileNo
+          }); // this.props.sendOtp(true)
+
           return;
         }
       }).catch(error => {
@@ -429,7 +434,6 @@ class LoginScreen extends Component {
 
 LoginScreen.propTypes = {
   url: PropTypes.string,
-  sendOtp: PropTypes.func.isRequired,
   color: PropTypes.string
 };
 LoginScreen.defaultProps = {

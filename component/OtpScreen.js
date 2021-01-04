@@ -191,7 +191,9 @@ verify() {
      AsyncStorage.setItem("userpk", JSON.stringify(responseJson.pk))
      console.log(responseJson,'kkkkkkkkkkkkkkkkkkkkkkkkkk ');
      console.log('OtpScreen',this.state.sessionid,csrf,responseJson.pk)
-     this.props.navigation.navigate('DefaultScreen')
+     AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
+     return  this.props.navigation.navigate ('DefaultScreen')
+     });
      // this.props.redirect({serverUrl:url,csrf:responseJson.csrf_token,userPk:JSON.stringify(responseJson.pk),sessionid:this.state.sessionid})
      // AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
      //  return  this.props.navigation.navigate ('DefaultScreen')
