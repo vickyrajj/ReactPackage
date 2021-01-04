@@ -91,7 +91,7 @@ class LoginScreen extends Component {
        }
    }
 
-    sendOtp() {
+    sendOtp(){
     var mob = /^[1-9]{1}[0-9]{9}$/;
     if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
       this.refs.toast.show('Enter Correct Mobile No');
@@ -114,7 +114,12 @@ class LoginScreen extends Component {
           if (!responseJson){
             this.getOtp()
           }else{
-            this.props.sendOtp(true)
+            this.props.navigation.navigate('OtpScreen',{
+              screen:'LogInScreen',
+              url:this.state.url,
+              username:this.state.mobileNo,
+            })
+            // this.props.sendOtp(true)
             return
           }
         })
@@ -252,7 +257,7 @@ class LoginScreen extends Component {
                  console.log(this.state.url,'urllllllll');
                  AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
 
-             });
+                 });
            })
          })
          .catch((error) => {
@@ -328,7 +333,6 @@ class LoginScreen extends Component {
 
 LoginScreen.propTypes = {
   url:PropTypes.string,
-  sendOtp: PropTypes.func.isRequired,
   color:PropTypes.string
 };
 
