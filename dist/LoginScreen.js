@@ -127,12 +127,12 @@ class LoginScreen extends Component {
   }
 
   sendOtp() {
-    this.props.navigation.navigate('OtpScreen', {
-      screen: 'LogInScreen',
-      url: this.state.url,
-      username: this.state.mobileNo
-    });
-    return;
+    // this.props.navigation.navigate('OtpScreen',{
+    //   screen:'LogInScreen',
+    //   url:this.state.url,
+    //   username:this.state.mobileNo,
+    // })
+    // return
     var mob = /^[1-9]{1}[0-9]{9}$/;
 
     if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {

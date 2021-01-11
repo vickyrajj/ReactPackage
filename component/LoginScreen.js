@@ -92,12 +92,12 @@ class LoginScreen extends Component {
    }
 
   sendOtp(){
-    this.props.navigation.navigate('OtpScreen',{
-      screen:'LogInScreen',
-      url:this.state.url,
-      username:this.state.mobileNo,
-    })
-    return
+    // this.props.navigation.navigate('OtpScreen',{
+    //   screen:'LogInScreen',
+    //   url:this.state.url,
+    //   username:this.state.mobileNo,
+    // })
+    // return
     var mob = /^[1-9]{1}[0-9]{9}$/;
     if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
       this.refs.toast.show('Enter Correct Mobile No');
@@ -239,7 +239,7 @@ class LoginScreen extends Component {
              console.log(AsyncStorage.setItem("SERVER_URL", this.state.url),'url');
              fetch(this.state.url + '/api/HR/users/?mode=mySelf&format=json', {
                headers: {
-                  "Cookie" :"csrftoken="+responseJson.csrf_token+";sessionid=" + this.state.sessionid +";",
+                 "Cookie" :"csrftoken="+responseJson.csrf_token+";sessionid=" + this.state.sessionid +";",
                  'Accept': 'application/json',
                  'Content-Type': 'application/json',
                  'Referer': this.state.url,
