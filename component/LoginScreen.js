@@ -98,11 +98,14 @@ class LoginScreen extends Component {
     //   username:this.state.mobileNo,
     // })
     // return
-    var mob = /^[1-9]{1}[0-9]{9}$/;
-    if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
-      this.refs.toast.show('Enter Correct Mobile No');
-    } else {
-      this.refs.toast.show('OTP request sent.');
+    // var mob = /^[1-9]{1}[0-9]{9}$/;
+    // if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
+    //   this.refs.toast.show('Enter Correct Mobile No');
+    // }
+    if (this.state.mobileNo == undefined || this.state.mobileNo.length==0) {
+      this.refs.toast.show('Enter Username or Mobile No');
+    }else {
+      // this.refs.toast.show('OTP request sent.');
       var data = new FormData();
       data.append("id", this.state.mobileNo);
       fetch(this.state.url + '/generateOTP/?mobile='+this.state.mobileNo, {
@@ -111,27 +114,54 @@ class LoginScreen extends Component {
         .then((response) => {
           if (response.status == 200) {
             this.setState({ username: this.state.mobileNo })
-            return true
+            try{
+              var sessionid = response.headers.get('set-cookie').split('sessionid=')[1].split(';')[0]
+            }catch(e){
+              var sessionid = null
+            }
+            console.log(response.headers,sessionid,'fdkgmjdm');
+            if(sessionid!=null){
+              this.setState({ sessionid: sessionid })
+              AsyncStorage.setItem("sessionid", sessionid)
+              return response.json()
+            }else{
+              return true
+            }
           }else{
             return false
           }
         })
         .then((responseJson) => {
-          if (!responseJson){
-            this.getOtp()
+          console.log(responseJson,'fskfgjkdmfg');
+          if(responseJson.pk!=undefined){
+            var csrf = responseJson.csrf_token
+            var url = this.state.url
+            AsyncStorage.setItem("SERVER_URL", this.state.url)
+            AsyncStorage.setItem("csrf", responseJson.csrf_token)
+            AsyncStorage.setItem("userpk", JSON.stringify(responseJson.pk))
+            console.log(responseJson,'kkkkkkkkkkkkkkkkkkkkkkkkkk ');
+            AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
+             return  this.props.navigation.navigate ('DefaultScreen')
+            });
           }else{
-            this.props.navigation.navigate('OtpScreen',{
-              screen:'LogInScreen',
-              url:this.state.url,
-              username:this.state.mobileNo,
-            })
-            // this.props.sendOtp(true)
-            return
+            if (!responseJson){
+              this.getOtp()
+            }else{
+              this.props.navigation.navigate('OtpScreen',{
+                screen:'LogInScreen',
+                url:this.state.url,
+                username:this.state.mobileNo,
+              })
+              // this.props.sendOtp(true)
+              return
+            }
           }
+
+
         })
         .catch((error) => {
           this.refs.toast.show(error.toString());
-          this.props.sendOtp(false)
+          // this.props.sendOtp(false)
           return
         });
     }
@@ -239,7 +269,7 @@ class LoginScreen extends Component {
              console.log(AsyncStorage.setItem("SERVER_URL", this.state.url),'url');
              fetch(this.state.url + '/api/HR/users/?mode=mySelf&format=json', {
                headers: {
-                 "Cookie" :"csrftoken="+responseJson.csrf_token+";sessionid=" + this.state.sessionid +";",
+                  "Cookie" :"csrftoken="+responseJson.csrf_token+";sessionid=" + this.state.sessionid +";",
                  'Accept': 'application/json',
                  'Content-Type': 'application/json',
                  'Referer': this.state.url,
@@ -309,17 +339,16 @@ class LoginScreen extends Component {
 
                    <View style={{marginHorizontal:30,width:width-60,marginVertical:15,}}>
                      <TextInput style={{height: 50,borderWidth:1,borderColor:'rgba(0, 0, 0, 0.1)',width:'100%',borderRadius:10,backgroundColor:'rgba(0, 0, 0, 0.1)',paddingHorizontal:15,fontSize:16}}
-                         placeholder="Mobile Number"
+                         placeholder="UserName / Mobile Number"
                          placeholderTextColor='rgba(0, 0, 0, 0.5)'
                          selectionColor={'#000'}
                          onChangeText={query => { this.setState({ mobileNo: query });this.setState({ username: query }) }}
                          value={this.state.mobileNo}
-                         keyboardType={'numeric'}
                       />
                     </View>
 
                     <TouchableOpacity onPress={()=>{this.sendOtp()}} style={{alignItems:'center',justifyContent:'center',marginHorizontal:30,width:width-60,borderRadius:10,marginVertical:15,paddingVertical:12,backgroundColor:'#286090'}}>
-                      <Text style={{fontSize:18,color:'#fff',fontWeight:'600'}}>Get OTP</Text>
+                      <Text style={{fontSize:18,color:'#fff',fontWeight:'600'}}>Login</Text>
                     </TouchableOpacity>
 
                  </View>
@@ -356,3 +385,4 @@ const styles = StyleSheet.create({
 export {
   LoginScreen
 }
+  // url: 'https://klouderp.com',
