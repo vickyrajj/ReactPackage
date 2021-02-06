@@ -2,6 +2,7 @@ import  {StyledText}   from './component/StyledText.js';
 import  {LoginScreen}   from './component/LoginScreen.js';
 import  {OtpScreen}   from './component/OtpScreen.js';
 import  {RegisterScreen}   from './component/RegisterScreen.js';
+import  ContactCreation    from './component/ContactCreation.js';
 import  { HttpsClient }   from './component/HttpsClient.js';
 
 
@@ -28,10 +29,7 @@ const LoginStack =  createStackNavigator({
   export {
     LoginStack,
     RegisterScreen,
+    ContactCreation,
+    ViewNewContract,
     HttpsClient
   }
-
-  // export  {
-  //   StyledText,
-  //   LoginScreen
-  // };

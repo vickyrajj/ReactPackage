@@ -133,12 +133,14 @@ class LoginScreen extends Component {
     //   username:this.state.mobileNo,
     // })
     // return
-    var mob = /^[1-9]{1}[0-9]{9}$/;
-
-    if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
-      this.refs.toast.show('Enter Correct Mobile No');
+    // var mob = /^[1-9]{1}[0-9]{9}$/;
+    // if (this.state.mobileNo == undefined || mob.test(this.state.mobileNo) == false) {
+    //   this.refs.toast.show('Enter Correct Mobile No');
+    // }
+    if (this.state.mobileNo == undefined || this.state.mobileNo.length == 0) {
+      this.refs.toast.show('Enter Username or Mobile No');
     } else {
-      this.refs.toast.show('OTP request sent.');
+      // this.refs.toast.show('OTP request sent.');
       var data = new FormData();
       data.append("id", this.state.mobileNo);
       fetch(this.state.url + '/generateOTP/?mobile=' + this.state.mobileNo, {
@@ -148,25 +150,56 @@ class LoginScreen extends Component {
           this.setState({
             username: this.state.mobileNo
           });
-          return true;
+
+          try {
+            var sessionid = response.headers.get('set-cookie').split('sessionid=')[1].split(';')[0];
+          } catch (e) {
+            var sessionid = null;
+          }
+
+          console.log(response.headers, sessionid, 'fdkgmjdm');
+
+          if (sessionid != null) {
+            this.setState({
+              sessionid: sessionid
+            });
+            AsyncStorage.setItem("sessionid", sessionid);
+            return response.json();
+          } else {
+            return true;
+          }
         } else {
           return false;
         }
       }).then(responseJson => {
-        if (!responseJson) {
-          this.getOtp();
-        } else {
-          this.props.navigation.navigate('OtpScreen', {
-            screen: 'LogInScreen',
-            url: this.state.url,
-            username: this.state.mobileNo
-          }); // this.props.sendOtp(true)
+        console.log(responseJson, 'fskfgjkdmfg');
 
-          return;
+        if (responseJson.pk != undefined) {
+          var csrf = responseJson.csrf_token;
+          var url = this.state.url;
+          AsyncStorage.setItem("SERVER_URL", this.state.url);
+          AsyncStorage.setItem("csrf", responseJson.csrf_token);
+          AsyncStorage.setItem("userpk", JSON.stringify(responseJson.pk));
+          console.log(responseJson, 'kkkkkkkkkkkkkkkkkkkkkkkkkk ');
+          AsyncStorage.setItem("login", JSON.stringify(true)).then(res => {
+            return this.props.navigation.navigate('DefaultScreen');
+          });
+        } else {
+          if (!responseJson) {
+            this.getOtp();
+          } else {
+            this.props.navigation.navigate('OtpScreen', {
+              screen: 'LogInScreen',
+              url: this.state.url,
+              username: this.state.mobileNo
+            }); // this.props.sendOtp(true)
+
+            return;
+          }
         }
       }).catch(error => {
-        this.refs.toast.show(error.toString());
-        this.props.sendOtp(false);
+        this.refs.toast.show(error.toString()); // this.props.sendOtp(false)
+
         return;
       });
     }
@@ -388,7 +421,7 @@ class LoginScreen extends Component {
           paddingHorizontal: 15,
           fontSize: 16
         },
-        placeholder: "Mobile Number",
+        placeholder: "UserName / Mobile Number",
         placeholderTextColor: "rgba(0, 0, 0, 0.5)",
         selectionColor: '#000',
         onChangeText: query => {
@@ -399,8 +432,7 @@ class LoginScreen extends Component {
             username: query
           });
         },
-        value: this.state.mobileNo,
-        keyboardType: 'numeric'
+        value: this.state.mobileNo
       })), /*#__PURE__*/React.createElement(TouchableOpacity, {
         onPress: () => {
           this.sendOtp();
@@ -421,7 +453,7 @@ class LoginScreen extends Component {
           color: '#fff',
           fontWeight: '600'
         }
-      }, "Get OTP"))))));
+      }, "Login"))))));
     } else {
       return /*#__PURE__*/React.createElement(View, {
         style: {
@@ -447,4 +479,4 @@ LoginScreen.defaultProps = {
   color: '#f2f2f2'
 };
 const styles = StyleSheet.create({});
-export { LoginScreen };
+export { LoginScreen }; // url: 'https://klouderp.com',
