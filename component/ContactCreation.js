@@ -11,7 +11,8 @@ import  ModalBox from 'react-native-modalbox';
 import Modal from "react-native-modal";
 import {SearchBar}from 'react-native-elements';
 import moment from 'moment';
-import  { HttpsClient }  from './HttpsClient.js'
+import  { HttpsClient }  from './HttpsClient.js';
+import MapView from 'react-native-maps';
 
 
 import { StackNavigator } from 'react-navigation';
@@ -31,36 +32,84 @@ class ContactCreation extends React.Component{
     ...ViewPropTypes,
     url:PropTypes.string,
     redirect:PropTypes.bool,
-    navigateTo:PropTypes.string,
+    redirectPage:PropTypes.string,
+    edit:PropTypes.bool,
+    data:PropTypes.object
   };
   static defaultProps = {
     url: 'https://klouderp.com',
     redirect:true,
-    navigateTo:'ViewNewContract'
+    redirectPage:'ViewNewContract',
+    edit:false,
+    data:null
   }
 
     constructor(props) {
       super(props);
+      var edit = false
+      var data = null
+      var firstName = ''
+      var companyName = ''
+      var phone = ''
+      var email = ''
+      var location = ''
+      var pincode = ''
+      var isSez = false
+      var showMore = false
+      var selectedCompany = null
+      var selectedPincode = null
+      var city = ''
+      var state = ''
+      var country = ''
+      var designation = ''
+      var gstin = ''
 
+      if(props.edit){
+        edit = true
+        data = props.data
+        firstName = data.name
+        phone = data.mobile
+        email = data.email
+        pincode = data.pincode
+        city = data.city
+        state = data.state
+        country = data.country
+        location = data.street
+        selectedCompany = data.company
+        selectedPincode = data.pincode
+        isSez = data.isGst
+        designation = data.designation
+        if(data.company!=null&&data.company!=undefined){
+          companyName = data.company.name
+          gstin = data.company.tin
+        }
+      }
       this.state = {
          SERVER_URL:'',
-         firstName:'',
-         companyName:'',
-         phone:'',
-         email:'',
-         location:'',
-         pincode:'',
+         firstName:firstName,
+         companyName:companyName,
+         phone:phone,
+         email:email,
+         location:location,
+         pincode:pincode,
          companyList:[],
          show:false,
-         isSez:false,
+         isSez:isSez,
          showMore:false,
-         selectedCompany:null,
-         selectedPincode:null,
-         designation:'',
-         gstin:'',
+         selectedCompany:selectedCompany,
+         selectedPincode:selectedPincode,
+         designation:designation,
+         gstin:gstin,
          createdoc:false,
          newdoc:false,
-         viewContact:[]
+         viewContact:[],
+         contactSaved:false,
+         redirectPage:props.redirectPage,
+         edit:edit,
+         city:city,
+         state:state,
+         country:country,
+         data:data
       };
       willFocus = props.navigation.addListener(
      'didFocus',
@@ -70,13 +119,37 @@ class ContactCreation extends React.Component{
       );
   }
 
+  clearData=(item)=>{
+    this.setState({
+    firstName:'',
+    companyName:'',
+    phone:'',
+    email:'',
+    location:'',
+    pincode:'',
+    companyList:[],
+    show:false,
+    isSez:false,
+    showMore:false,
+    selectedCompany:null,
+    selectedPincode:null,
+    designation:'',
+    gstin:'',
+    createdoc:false,
+    newdoc:false,
+    viewContact:[],
+    contactSaved:false,
+  })
+    this.props.redirectPageTo(item,this.state.viewContact)
+  }
+
     setUrl=async()=>{
       var SERVER_URL =  await AsyncStorage.getItem('SERVER_URL');
       this.setState({SERVER_URL})
     }
 
     componentDidMount=()=>{
-      console.log(this.props.url,'gkhfkhkofk');
+      console.log(this.props.redirectPage,'navfggfigateToooo');
       this.setUrl()
     }
 
@@ -110,13 +183,22 @@ class ContactCreation extends React.Component{
             <MaterialIcons name="arrow-back" size={24} color="black" />
            </TouchableOpacity>
            <View style={{width:width*0.7,alignItems:'center',justifyContent:'center'}}>
-            <Text style={{fontSize:20,color:'#000'}}>Create Contact</Text>
+            <Text style={{fontSize:20,color:'#000'}}>{this.state.edit?'Edit':'Create'} Contact</Text>
            </View>
-           <TouchableOpacity onPress={()=>{this.save()}} style={{justifyContent: 'center', alignItems: 'center',width:width*0.15,}}>
-            <MaterialIcons name="check" size={24} color="black" />
-           </TouchableOpacity>
+           {!this.state.contactSaved&&
+            <TouchableOpacity onPress={()=>{this.save()}} style={{justifyContent: 'center', alignItems: 'center',width:width*0.15,}}>
+              <MaterialIcons name="check" size={24} color="black" />
+            </TouchableOpacity>
+           }
        </View>
       )
+    }
+
+    navigateToScreen=(item)=>{
+      console.log(item,this.state.navigateTo,'vickyupdateee');
+      // return
+      this.clearData(item)
+
     }
 
     changeShowMore=(showMore)=>{
@@ -173,16 +255,21 @@ class ContactCreation extends React.Component{
       if(this.state.designation.length>0){
         sendData.designation = this.state.designation
       }
+      if(this.state.edit){
+        sendData.pk = this.state.data.pk
+      }
       // return
+
       var url = this.state.SERVER_URL + '/api/clientRelationships/createContact/'
       var data = await HttpsClient.post(url,sendData)
+
       console.log(sendData,data,'dfbsbn');
       if(data.type=='success'){
-        this.setState({viewContact:data.data})
+        this.setState({viewContact:data.data,contactSaved:true})
         if(!this.props.redirect){
-          this.setState({newdoc:true})
-        }else{
           this.props.navigation.goBack()
+        }else{
+          this.setState({newdoc:true})
         }
       }else{
         return
@@ -206,7 +293,7 @@ class ContactCreation extends React.Component{
                     renderItem={({item,index})=>{
                     return(
                       <View style={{marginVertical:4,backgroundColor:'#000',borderRadius:15,borderColor:'#f2f2f2',paddingHorizontal:10,height:40,justifyContent:'center',borderBottomWidth:1,borderColor:'#f2f2f2'}} >
-                        <TouchableOpacity onPress={()=>{this.setState({createdoc:false});this.props.navigation.navigate(this.props.navigateTo,{item:item,viewContact:this.state.viewContact})}}>
+                        <TouchableOpacity onPress={()=>{this.navigateToScreen(item)}}>
                           <View  style={{}} >
                             <Text style={{color:'#fff',fontSize:14,fontWeight:'600',}} numberOfLines={2}>{item.heading}</Text>
                           </View>

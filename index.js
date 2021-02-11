@@ -3,6 +3,7 @@ import  {LoginScreen}   from './component/LoginScreen.js';
 import  {OtpScreen}   from './component/OtpScreen.js';
 import  {RegisterScreen}   from './component/RegisterScreen.js';
 import  ContactCreation    from './component/ContactCreation.js';
+import  ViewNewContract    from './component/ViewNewContract.js';
 import  { HttpsClient }   from './component/HttpsClient.js';
 
 
