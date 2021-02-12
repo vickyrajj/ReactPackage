@@ -248,7 +248,8 @@ export default class ViewNewContract extends React.Component{
       if(data.type=='success'){
         this.getContract()
         this.setState({showModal:false})
-        this.props.navigation.navigate('NavigationScreen')
+        this.props.redirectPageTo()
+        // this.props.navigation.navigate('NavigationScreen')
       }else{
         return
       }

@@ -63,7 +63,7 @@ class ContactCreation extends React.Component{
       var country = ''
       var designation = ''
       var gstin = ''
-
+      console.log(props.edit,'adsfdgfdghfhfhfgjh');
       if(props.edit){
         edit = true
         data = props.data
@@ -120,26 +120,30 @@ class ContactCreation extends React.Component{
   }
 
   clearData=(item)=>{
-    this.setState({
-    firstName:'',
-    companyName:'',
-    phone:'',
-    email:'',
-    location:'',
-    pincode:'',
-    companyList:[],
-    show:false,
-    isSez:false,
-    showMore:false,
-    selectedCompany:null,
-    selectedPincode:null,
-    designation:'',
-    gstin:'',
-    createdoc:false,
-    newdoc:false,
-    viewContact:[],
-    contactSaved:false,
-  })
+    if(!this.state.edit){
+      this.setState({
+      firstName:'',
+      companyName:'',
+      phone:'',
+      email:'',
+      location:'',
+      pincode:'',
+      companyList:[],
+      show:false,
+      isSez:false,
+      showMore:false,
+      selectedCompany:null,
+      selectedPincode:null,
+      designation:'',
+      gstin:'',
+      createdoc:false,
+      newdoc:false,
+      viewContact:[],
+      contactSaved:false,
+    })
+  }else{
+    this.setState({createdoc:false,contactSaved:false})
+  }
     this.props.redirectPageTo(item,this.state.viewContact)
   }
 
