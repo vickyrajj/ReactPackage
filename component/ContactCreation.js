@@ -34,13 +34,15 @@ class ContactCreation extends React.Component{
     redirect:PropTypes.bool,
     redirectPage:PropTypes.string,
     edit:PropTypes.bool,
-    data:PropTypes.object
+    data:PropTypes.object,
+    isCompany:PropTypes.bool,
   };
   static defaultProps = {
     url: 'https://klouderp.com',
     redirect:true,
     redirectPage:'ViewNewContract',
     edit:false,
+    isCompany:false,
     data:null
   }
 
@@ -63,6 +65,7 @@ class ContactCreation extends React.Component{
       var country = ''
       var designation = ''
       var gstin = ''
+      var isCompany = false
       console.log(props.edit,'adsfdgfdghfhfhfgjh');
       if(props.edit){
         edit = true
@@ -82,6 +85,14 @@ class ContactCreation extends React.Component{
         if(data.company!=null&&data.company!=undefined){
           companyName = data.company.name
           gstin = data.company.tin
+        }
+      }
+      if(props.isCompany){
+        selectedCompany = props.data
+        if(selectedCompany!=null&&selectedCompany!=undefined){
+          companyName = selectedCompany.name
+          gstin = selectedCompany.tin
+          isCompany = true
         }
       }
       this.state = {
@@ -109,7 +120,8 @@ class ContactCreation extends React.Component{
          city:city,
          state:state,
          country:country,
-         data:data
+         data:data,
+         isCompany:isCompany
       };
       willFocus = props.navigation.addListener(
      'didFocus',
@@ -136,6 +148,30 @@ class ContactCreation extends React.Component{
       selectedPincode:null,
       designation:'',
       gstin:'',
+      createdoc:false,
+      newdoc:false,
+      viewContact:[],
+      contactSaved:false,
+    })
+  }else{
+    this.setState({createdoc:false,contactSaved:false})
+  }
+    this.props.redirectPageTo(item,this.state.viewContact)
+  }
+  companyClearData=(item)=>{
+    if(this.state.isCompany){
+      this.setState({
+      firstName:'',
+      phone:'',
+      email:'',
+      location:'',
+      pincode:'',
+      companyList:[],
+      show:false,
+      isSez:false,
+      showMore:false,
+      selectedPincode:null,
+      designation:'',
       createdoc:false,
       newdoc:false,
       viewContact:[],
@@ -198,10 +234,16 @@ class ContactCreation extends React.Component{
       )
     }
 
+
+
     navigateToScreen=(item)=>{
       console.log(item,this.state.navigateTo,'vickyupdateee');
       // return
-      this.clearData(item)
+      if(this.state.isCompany){
+        this.companyClearData(item)
+      }else{
+        this.clearData(item)
+      }
 
     }
 
@@ -256,7 +298,7 @@ class ContactCreation extends React.Component{
       if(this.state.gstin!=null&&this.state.gstin.length>0){
         sendData.gstin = this.state.gstin
       }
-      if(this.state.designation.length>0){
+      if(this.state.designation!=null&&this.state.designation!=undefined&&this.state.designation.length>0){
         sendData.designation = this.state.designation
       }
       if(this.state.edit){
@@ -526,12 +568,12 @@ class ContactCreation extends React.Component{
                     />
                   </View>
 
-                  <TouchableOpacity style={{marginHorizontal:25,paddingTop:20,paddingBottom:10}} onPress={()=>{this.changeShowMore(this.state.showMore) }}>
+                  <TouchableOpacity style={{marginHorizontal:25,paddingTop:20,paddingBottom:this.state.showMore?10:60}} onPress={()=>{this.changeShowMore(this.state.showMore) }}>
                     <Text style={{color:'#306f8a',fontSize:15}}>{this.state.showMore?'Show Less':'Show More'}</Text>
                   </TouchableOpacity>
 
                   {this.state.showMore&&
-                    <View>
+                    <View style={{paddingBottom:60}}>
                       <View style={{marginHorizontal:25,marginVertical:10,}}>
                        <Text style={{color:'#000',fontSize:16,paddingBottom:10}}>GSTIN</Text>
                         <View style={{flexDirection:'row',}}>
